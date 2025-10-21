@@ -58,8 +58,8 @@
       open: true,
       host: true, // Cho phép truy cập từ bên ngoài
       allowedHosts: [
-        '60865b5717bc.ngrok-free.app', // Thêm ngrok host của bạn
-        '.ngrok-free.app',
+        '1c88310a84bb.ngrok-free.app', // Thêm ngrok host của bạn
+        '.ngrok-free.app', // Hoặc cho phép tất cả ngrok domains
       ]
     },
   });

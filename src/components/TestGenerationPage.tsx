@@ -150,7 +150,7 @@ export function TestGenerationPage({
       {/* Left Sidebar */}
       <div
         className={`bg-white border-r border-cyan-200 transition-all duration-300 ${
-          sidebarExpanded ? 'w-80' : 'w-16'
+          sidebarExpanded ? 'w-64' : 'w-16'
         }`}
       >
         <div className="flex flex-col h-full">
@@ -386,7 +386,7 @@ export function TestGenerationPage({
       </div>
 
       {/* Right Sidebar - Progress Tracker */}
-      <div className="w-80 bg-white border-l border-cyan-200 p-6">
+      <div className="w-64 bg-white border-l border-cyan-200 p-6">
         <h3 className="text-cyan-900 mb-6">Generation Progress</h3>
         
         <div className="space-y-4">

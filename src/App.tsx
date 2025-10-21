@@ -475,136 +475,100 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Dashboard View */}
-        {currentView === 'dashboard' && currentUser && (
-          <>
-            <ProjectDashboard
+      {/* Full-screen views without padding */}
+      {(currentView === 'test-generation-new' || currentView === 'test-requirements' || currentView === 'test-scripts') && (
+        <>
+          {/* New Test Generation Flow - Create Feature Page */}
+          {currentView === 'test-generation-new' && selectedProject && currentUser && (
+            <TestGenerationPage
+              project={selectedProject}
+              feature={selectedFeature || null}
               currentUser={currentUser}
-              onSelectProject={handleSelectProject}
-              onCreateProject={() => setShowCreateProjectModal(true)}
-              projects={projects}
+              onBack={handleBackToProject}
+              onRequirementsGenerated={handleRequirementsGenerated}
+              onSelectFeature={handleStartTestGeneration}
             />
-            <CreateProjectModal
-              isOpen={showCreateProjectModal}
-              onClose={() => setShowCreateProjectModal(false)}
-              onSave={handleCreateProject}
-              userId={currentUser.id}
-            />
-          </>
-        )}
+          )}
 
-        {/* Project Detail View */}
-        {currentView === 'project-detail' && selectedProject && currentUser && (
-          <ProjectDetail
-            project={selectedProject}
-            currentUser={currentUser}
-            onBack={handleBackToDashboard}
-            onStartTestGeneration={handleStartTestGeneration}
-            onViewVersions={handleViewVersions}
-            onUpdateProject={handleUpdateProject}
-            onDeleteProject={handleDeleteProject}
-            onCreateNewFeature={handleStartNewFeature}
-          />
-        )}
-
-        {/* Version History View */}
-        {currentView === 'version-history' && selectedProject && (
-          <VersionHistory
-            project={selectedProject}
-            feature={selectedFeature || undefined}
-            onBack={handleBackToProject}
-          />
-        )}
-
-        {/* New Test Generation Flow - Create Feature Page */}
-        {currentView === 'test-generation-new' && selectedProject && currentUser && (
-          <TestGenerationPage
-            project={selectedProject}
-            feature={selectedFeature || null}
-            currentUser={currentUser}
-            onBack={handleBackToProject}
-            onRequirementsGenerated={handleRequirementsGenerated}
-            onSelectFeature={handleStartTestGeneration}
-          />
-        )}
-
-        {/* Test Requirements View */}
-        {currentView === 'test-requirements' && generationState && (
-          <div className="space-y-6">
-            <Button
-              variant="outline"
-              onClick={handleBackToProject}
-              className="border-cyan-300"
-            >
-              ← Back to Project
-            </Button>
-
-            <Card className="p-6 bg-gradient-to-r from-cyan-600 to-cyan-700 border-cyan-800 text-white shadow-lg">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-white">{generationState.feature.name}</h2>
-                    <Badge className="bg-white/20 text-white border-white/30">
-                      Step 1: Requirements
-                    </Badge>
-                  </div>
-                  <p className="text-cyan-100">{generationState.feature.description}</p>
-                </div>
-              </div>
-            </Card>
-
+          {/* Test Requirements View */}
+          {currentView === 'test-requirements' && generationState && selectedProject && currentUser && (
             <TestRequirementsList
               requirements={generationState.requirements}
               onGenerateScripts={handleGenerateScripts}
               onUpdateRequirements={(reqs) => setGenerationState({ ...generationState, requirements: reqs })}
               isGenerating={isGeneratingScripts}
+              project={selectedProject}
+              feature={generationState.feature}
+              currentUser={currentUser}
+              onSelectFeature={handleStartTestGeneration}
+              onBack={handleBackToProject}
             />
-          </div>
-        )}
+          )}
 
-        {/* Test Scripts View */}
-        {currentView === 'test-scripts' && generationState && (
-          <div className="space-y-6">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentView('test-requirements')}
-              className="border-cyan-300"
-            >
-              ← Back to Requirements
-            </Button>
-
-            <Card className="p-6 bg-gradient-to-r from-cyan-600 to-cyan-700 border-cyan-800 text-white shadow-lg">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Code2 className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-white">{generationState.feature.name}</h2>
-                    <Badge className="bg-white/20 text-white border-white/30">
-                      Step 2: Test Scripts
-                    </Badge>
-                  </div>
-                  <p className="text-cyan-100">Review and export your generated test scripts</p>
-                </div>
-              </div>
-            </Card>
-
+          {/* Test Scripts View */}
+          {currentView === 'test-scripts' && generationState && selectedProject && currentUser && (
             <TestScriptsView
               testScripts={generationState.testScripts}
               postmanCollection={generationState.postmanCollection}
               onGenerateJSON={handleGenerateJSON}
               isGenerating={isGeneratingJSON}
+              project={selectedProject}
+              feature={generationState.feature}
+              currentUser={currentUser}
+              onSelectFeature={handleStartTestGeneration}
+              onBack={handleBackToProject}
+              onComplete={handleBackToProject}
             />
-          </div>
-        )}
+          )}
+        </>
+      )}
 
-        {/* Test Generation Workflow (Legacy Flow) */}
-        {currentView === 'test-generation' && selectedProject && selectedFeature && (
+      {/* Standard views with container */}
+      {currentView !== 'test-generation-new' && currentView !== 'test-requirements' && currentView !== 'test-scripts' && (
+        <main className="max-w-7xl mx-auto px-6 py-8">
+          {/* Dashboard View */}
+          {currentView === 'dashboard' && currentUser && (
+            <>
+              <ProjectDashboard
+                currentUser={currentUser}
+                onSelectProject={handleSelectProject}
+                onCreateProject={() => setShowCreateProjectModal(true)}
+                projects={projects}
+              />
+              <CreateProjectModal
+                isOpen={showCreateProjectModal}
+                onClose={() => setShowCreateProjectModal(false)}
+                onSave={handleCreateProject}
+                userId={currentUser.id}
+              />
+            </>
+          )}
+
+          {/* Project Detail View */}
+          {currentView === 'project-detail' && selectedProject && currentUser && (
+            <ProjectDetail
+              project={selectedProject}
+              currentUser={currentUser}
+              onBack={handleBackToDashboard}
+              onStartTestGeneration={handleStartTestGeneration}
+              onViewVersions={handleViewVersions}
+              onUpdateProject={handleUpdateProject}
+              onDeleteProject={handleDeleteProject}
+              onCreateNewFeature={handleStartNewFeature}
+            />
+          )}
+
+          {/* Version History View */}
+          {currentView === 'version-history' && selectedProject && (
+            <VersionHistory
+              project={selectedProject}
+              feature={selectedFeature || undefined}
+              onBack={handleBackToProject}
+            />
+          )}
+
+          {/* Test Generation Workflow (Legacy Flow) */}
+          {currentView === 'test-generation' && selectedProject && selectedFeature && (
           <div className="space-y-6">
             {/* Back Button */}
             <Button
@@ -722,8 +686,9 @@ export default function App() {
               <p className="mt-1">System Version 2.1.0 • Last Updated: October 17, 2025</p>
             </div>
           </div>
-        )}
-      </main>
+          )}
+        </main>
+      )}
       <Toaster position="top-right" />
     </div>
   );
