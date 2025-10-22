@@ -1,0 +1,148 @@
+API Testing Automation Workflow - ASCII Overview
+================================================
+
+Top-Level View Controller (App.tsx)
+-----------------------------------
+     +-------------+ <----- navigate -----> +--------------+
+     | LoginPage   |                        | RegisterPage |
+     +------+------+                        +------+-------+
+            | onLogin/onNavigateToLogin            | onRegister
+            v                                      v
++-----------+--------------------------------------+-----------+
+|                 App.tsx state hub and router                 |
+| currentView, currentUser, projects[], generationState, etc.  |
++-----------+---------------------+----------------------------+
+            |                     |
+            | currentView='dashboard'
+            v                     v
+     +------------------+        onSelectProject        +----------------+
+     | ProjectDashboard | ----------------------------> | ProjectDetail  |
+     +------------------+                               +----------------+
+            | onCreateProject                                 |
+            v                                                 | onViewVersions
+     +---------------------+                                   v
+     | CreateProjectModal  |                           +------------------+
+     +---------------------+                           | VersionHistory   |
+                                                       +------------------+
+
+Project Detail & Feature Management
+-----------------------------------
+                   +----------------+
+                   | ProjectDetail  |
+                   +--------+-------+
+                            |
+        +-------------------+-------------------------------+
+        |                   |                               |
+        | feature actions   | project actions               | tabs
+        v                   v                               v
+ +----------------+   +--------------------+        +--------------------+
+ | FeatureForm    |   | EditProjectModal   |        | TeamManagementTab  |
+ +----------------+   +--------------------+        +--------------------+
+        |                   |
+        | delete confirm    v
+        |           +-----------------------+
+        |           | DeleteProjectDialog   |
+        |           +-----------------------+
+        |
+        | onStartTestGeneration / onCreateNewFeature
+        v
+ (see Test Generation sections)
+
+New AI-Assisted Flow (currentView='test-generation-new' -> 'test-requirements' -> 'test-scripts')
+-----------------------------------------------------------------------------------------------
+[ProjectDetail] --onStartTestGeneration--> App.setCurrentView('test-generation-new')
+                                                |
+                                                v
+                                      +----------------------+
+                                      | TestGenerationPage   |
+                                      +---------+------------+
+                                                |
+                                                | generateTestRequirements()
+                                                | (utils/aiSimulator)
+                                                v
+                                      +----------------------+
+                                      | App.generationState  |
+                                      | requirements + feature|
+                                      +---------+------------+
+                                                |
+                                                | currentView='test-requirements'
+                                                v
+                                      +------------------------+
+                                      | TestRequirementsList   |
+                                      +----------+-------------+
+                                                 |
+                                                 | onGenerateScripts(selected)
+                                                 | -> App.handleGenerateScripts
+                                                 |    uses generateTestScript()
+                                                 v
+                                      +-------------------------+
+                                      | generationState.testScripts
+                                      +----------+--------------+
+                                                 |
+                                                 | currentView='test-scripts'
+                                                 v
+                                      +-------------------------+
+                                      | TestScriptsView         |
+                                      +----------+--------------+
+                                                 |
+                                                 | onGenerateJSON
+                                                 | -> convertToPostmanCollection()
+                                                 | -> feature.generationState.postmanCollection
+                                                 v
+                                      +-------------------------+
+                                      | PostmanCollection saved |
+                                      +-------------------------+
+                                                 |
+                                                 | onComplete/onBack
+                                                 v
+                                      +-------------------------+
+                                      | ProjectDetail resumes   |
+                                      +-------------------------+
+
+Legacy 3-Step Flow (currentView='test-generation')
+-------------------------------------------------
+[ProjectDetail] --onStartTestGeneration--> App.setCurrentView('test-generation')
+                         |
+                         v
+                +------------------------------+
+                | Step 1: RequirementCollection|
+                |  (RequirementCollectionStep) |
+                +--------------+---------------+
+                               | onComplete(spec, notes)
+                               v
+                +------------------------------+
+                | Step 2: ScriptGeneration     |
+                |    (ScriptGenerationStep)    |
+                +--------------+---------------+
+                               | onComplete(scripts, reqs)
+                               v
+                +------------------------------+
+                | Step 3: PostmanExportStep    |
+                |  (PostmanExportStep component)|
+                +--------------+---------------+
+                               |
+                               | ready for Postman export
+                               v
+                        Test artifacts showcased
+
+Data & Utility Sources
+----------------------
++-------------------+     consumed by App, ProjectDashboard, ProjectDetail
+| data/sampleData.ts| ----------------------------------------------+
+| - sampleProjects  |                                              |
+| - sampleFeatures  |                                              v
+| - sampleVersions  |                                   seeded UI lists
++-------------------+
+
++--------------------------+
+| utils/aiSimulator.ts     |
+| - generateTestRequirements() -> TestGenerationPage              |
+| - generateTestScript() -> App.handleGenerateScripts             |
+| - convertToPostmanCollection() -> App.handleGenerateJSON        |
++--------------------------+
+
+Notifications & Feedback
+------------------------
++--------------------+      +------------------------------+
+| Toaster component  |<---->| toast.* calls across components|
++--------------------+      +------------------------------+

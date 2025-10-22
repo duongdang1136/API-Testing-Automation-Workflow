@@ -1,0 +1,19 @@
+**AI Battle Competition 2025**
+**Duration:** 10 minutes for pitching + 10 minutes for Q&A
+**Pitching Outline**
+**1. General Information**
+* Introduction of yourself and the initiative
+**2. Initiative Details**
+* The situation before the initiative
+* The purpose of the initiative
+* The content of the initiative
+**3. Initiative Analysis**
+* Effectiveness
+* Novelty
+* Creativity
+**4. Necessary Conditions for Application**
+* Resources, tools, team, and implementation factors...
+
+***REQUIREMENT***
+- Focus on Core Feature: ** Requirement intake (`RequirementCollectionStep`), AI generation (`ScriptGenerationStep`), Postman export (`PostmanExportStep`).
+- Roadmap MVP Phase, Next Phase...
