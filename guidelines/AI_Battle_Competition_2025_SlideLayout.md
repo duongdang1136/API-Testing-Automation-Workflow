@@ -52,23 +52,129 @@
 - **Time Allocation:** ~1 min.
 - **Speaker Reminder:** Compare with traditional Postman workflows; reinforce AI-assisted creativity.
 
-## Slide 7 - Implementation Requirements & Roadmap
-- **Purpose:** Detail what is needed to apply the initiative at scale and outline the MVP-to-Next Phase evolution.
-- **Key Talking Points:** Team roles (QA, BA, Dev), tooling (Vite app, Postman, Git), data governance; roadmap split between MVP (Requirement intake -> AI generation -> Postman export) and Next Phase (collaborative reviews, regression insights, external integrations).
-- **Prototype Cues:** Pair `TeamManagementTab.tsx` roster styling with the release cadence cards from `VersionHistory.tsx` to visualize ownership and timeline.
-- **Visual Treatment:** Checklist card for resourcing alongside a horizontal roadmap lane with badges for MVP launch and Next Phase milestones.
-- **Time Allocation:** ~1 min.
-- **Speaker Reminder:** Call out the gating metrics that unlock the Next Phase (e.g., 90% automated coverage, stakeholder sign-off) and link to supporting documentation.
+## Slide 7 Necessary Conditions for Application
+Technical Stack:
+- Frontend: NextJS 
+- Backend: Supabase (Auth, Database, Storage)
+- AI: Gemini
+- Deployment: Vercel
 
-## Slide 8 - Q&A + Call to Action
+Team & Timeline:
+- 2 Developers (1 FE + 1 BE)
+- Development: 1 month
+- Maintenance: Dedicated support rotation
+
+Essential Requirements:
+- System Prompt: OK
+- SRS Documents: OK
+- Quality process : OK
+- AI API credits (~$X/month): Next Slide
+
+## Slide 8 Phân tích Token Usage (Gemini API)
+Actual Usage Data (1 Flows)
+
+Input tokens: 1,733
+Output tokens: 15,825
+Total tokens: 17,558
+Total Cost: $0.040083
+
+*Token Flow Visualization*
+```
+END-TO-END TOKEN FLOW (3-Step Process)
+═══════════════════════════════════════════════════════
+
+USER INPUT
+  "I need tests for Login OTP API with OAuth2..."
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 1: List Requirements                           │
+│ ─────────────────────────────────────────────────   │
+│ Input:  1,406 tokens  ($0.012)                      │
+│ Output: 4,781 tokens                                │
+│                                                     │
+│ ✓ Parse user requirements                           │
+│ ✓ Extract API endpoints                             │
+│ ✓ Identify test scenarios                           │
+│ ✓ Structure data for next step                      │
+└─────────────────────────────────────────────────────┘
+    │(output becomes input) 
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 2: Generate Test Scripts                       │
+│ ─────────────────────────────────────────────────   │
+│ Input:  275 tokens  ($0.013)                        │
+│ Output: 5,157 tokens                                │
+│                                                     │
+│ ✓ Create pre-request scripts                        │
+│ ✓ Generate pm.test() assertions                     │
+│ ✓ Setup environment variables                       │
+│ ✓ Add helper functions                              │
+└─────────────────────────────────────────────────────┘
+    │(output becomes input) 
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 3: Export Postman JSON                         │
+│ ─────────────────────────────────────────────────   │
+│ Input:  52 tokens  ($0.015)                         │
+│ Output: 5,869 tokens                                │
+│                                                     │
+│ ✓ Format as Postman Collection v2.1                 │
+│ ✓ Add request/response examples                     │
+│ ✓ Include documentation                             │
+│ ✓ Generate collection metadata                      │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+POSTMAN COLLECTION.JSON
+  Ready to import into Postman
+
+═══════════════════════════════════════════════════════
+TOTAL TOKENS: 17,558
+TOTAL COST:   $0.040083 per complete flow
+═══════════════════════════════════════════════════════
+```
+
+
+
+Monthly Budget Estimation
+*Scenario 1: Small Team (50 QA/Devs)*
+Usage: 10 flows/person/week
+Monthly: 50 users × 10 flows/week × 4 weeks = 2,000 flows
+Total tokens: 17,558 × 2,000 = 35,116,000 tokens
+Monthly cost: $0.040083 × 2,000 = $80.17
+Annual cost: $962
+
+
+
+## Slide 9 Budget Slide
+"OPERATIONAL COSTS (ANNUAL)
+
+AI Processing:        $962
+  • Gemini API
+  • ~2,000 flows (6,000 requests)/month
+  • 50 active users
+
+Infrastructure:       $24
+  • Supabase (database):	FREE TIER
+  • Vercel (hosting):	FREE TIER
+  • Domain & SSL:	$24
+
+──────────────────────────
+TOTAL ANNUAL:        $986
+
+TIME SAVED: ~166 hours/month = 20 main-days
+(5 min/manual script × 2000 flows (6,000 requests))
+
+PRODUCTIVITY GAIN: 50-70%
+
+
+
+
+## Slide 10 - Q&A + Call to Action
 - **Purpose:** Transition to Q&A while reinforcing the ask.
 - **Key Talking Points:** Invite questions, offer demo sandbox, highlight next milestone.
 - **Prototype Cues:** Reuse success toast styling (`sonner`) for a "Ready to test it?" CTA; show a compact summary of active projects.
 - **Visual Treatment:** Minimalist dark-on-light slide with CTA button motif centered.
 - **Time Allocation:** ~1 min (before opening floor).
 - **Speaker Reminder:** Prompt judges to focus on effectiveness/novelty and mention backup slides availability.
-
-### Optional Backup Slides (Appendix)
-- KPI deep-dive sourced from `sampleData` (coverage by feature).
-- Architectural diagram of AI pipeline referencing `aiSimulator.ts`.
-- Implementation roadmap with release cadence (`VersionHistory` data).
