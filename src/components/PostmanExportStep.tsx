@@ -4,10 +4,10 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { 
-  Download, 
-  CheckCircle2, 
-  FileJson, 
+import {
+  Download,
+  CheckCircle2,
+  FileJson,
   Sparkles,
   Copy,
   ExternalLink,
@@ -58,7 +58,7 @@ export function PostmanExportStep({ apiSpec, testScripts, requirements }: Postma
 
   const handleCopyJSON = () => {
     if (!postmanCollection) return;
-    
+
     navigator.clipboard.writeText(JSON.stringify(postmanCollection, null, 2));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

@@ -388,7 +388,7 @@ export function TestGenerationPage({
       {/* Right Sidebar - Progress Tracker */}
       <div className="w-64 bg-white border-l border-cyan-200 p-6">
         <h3 className="text-cyan-900 mb-6">Generation Progress</h3>
-        
+
         <div className="space-y-4">
           {/* Step 1 */}
           <div className="flex items-start gap-3">

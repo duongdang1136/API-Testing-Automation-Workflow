@@ -1,0 +1,62 @@
+
+sequenceDiagram
+    actor User
+    participant Dashboard as ProjectDashboard
+    participant App as App.tsx (State Hub)
+    participant Detail as ProjectDetail
+    participant GenPage as TestGenerationPage
+    participant AI as utils/aiSimulator
+    participant ReqList as TestRequirementsList
+    participant ScriptView as TestScriptsView
+
+    Note over App: currentView = 'dashboard'
+    User->>Dashboard: Select Project
+    Dashboard->>App: handleSelectProject(project)
+    App->>App: setSelectedProject(project)
+    App->>App: setCurrentView('project-detail')
+    
+    Note over App: currentView = 'project-detail'
+    User->>Detail: Click "Generate Tests"
+    Detail->>App: handleStartTestGeneration(feature)
+    
+    alt Feature has existing state
+        App->>App: Load existing state
+        App->>App: setCurrentView('test-scripts' or 'test-requirements')
+    else New Generation
+        App->>App: setGenerationState(null)
+        App->>App: setCurrentView('test-generation-new')
+    end
+
+    Note over App: currentView = 'test-generation-new'
+    User->>GenPage: Enter Description & Click Generate
+    GenPage->>AI: generateTestRequirements(description)
+    AI-->>GenPage: Returns TestRequirement[]
+    GenPage->>App: handleRequirementsGenerated(requirements, feature)
+    App->>App: Update Project & Feature State
+    App->>App: setGenerationState(requirements)
+    App->>App: setCurrentView('test-requirements')
+
+    Note over App: currentView = 'test-requirements'
+    User->>ReqList: Select Requirements & Click "Generate Scripts"
+    ReqList->>App: handleGenerateScripts(selectedReqs)
+    activate App
+    App->>AI: generateTestScript(req, mockSpec) (Loop)
+    AI-->>App: Returns TestScript
+    App->>App: Update generationState (add scripts)
+    App->>App: setCurrentView('test-scripts')
+    deactivate App
+
+    Note over App: currentView = 'test-scripts'
+    User->>ScriptView: Review Scripts & Click "Export Postman"
+    ScriptView->>App: handleGenerateJSON()
+    activate App
+    App->>AI: convertToPostmanCollection(scripts, spec)
+    AI-->>App: Returns PostmanCollection
+    App->>App: Update Feature Status to 'completed'
+    App->>App: Save PostmanCollection
+    deactivate App
+    
+    User->>ScriptView: Click "Complete" / "Back"
+    ScriptView->>App: handleBackToProject()
+    App->>App: setCurrentView('project-detail')
+

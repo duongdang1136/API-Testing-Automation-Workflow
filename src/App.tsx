@@ -17,9 +17,9 @@ import { Badge } from './components/ui/badge';
 import { Separator } from './components/ui/separator';
 import { Toaster } from './components/ui/sonner';
 import { sampleProjects } from './data/sampleData';
-import { 
-  CheckCircle2, 
-  Circle, 
+import {
+  CheckCircle2,
+  Circle,
   Sparkles,
   FileText,
   Code2,
@@ -34,7 +34,7 @@ import { APISpecification, TestRequirement, TestScript, AuthUser, Project, Featu
 import { generateTestScript, convertToPostmanCollection } from './utils/aiSimulator';
 import { toast } from 'sonner@2.0.3';
 
-type AppView = 
+type AppView =
   | 'login'
   | 'register'
   | 'dashboard'
@@ -49,18 +49,18 @@ export default function App() {
   // Authentication state
   const [currentView, setCurrentView] = useState<AppView>('login');
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-  
+
   // Project management state
   const [projects, setProjects] = useState<Project[]>(sampleProjects);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
-  
+
   // New test generation workflow state
   const [generationState, setGenerationState] = useState<FeatureGenerationState | null>(null);
   const [isGeneratingScripts, setIsGeneratingScripts] = useState(false);
   const [isGeneratingJSON, setIsGeneratingJSON] = useState(false);
-  
+
   // Legacy test generation workflow state (for old flow)
   const [currentStep, setCurrentStep] = useState(1);
   const [apiSpec, setApiSpec] = useState<APISpecification | null>(null);
@@ -121,7 +121,7 @@ export default function App() {
 
   const handleStartTestGeneration = (feature: Feature) => {
     setSelectedFeature(feature);
-    
+
     // Check if feature has existing generation state
     if (feature.status === 'completed' && feature.generationState) {
       // Load existing generation state and go to test scripts view
@@ -173,7 +173,7 @@ export default function App() {
         const featureExists = p.features.some(f => f.id === feature.id);
         return {
           ...p,
-          features: featureExists 
+          features: featureExists
             ? p.features.map(f => f.id === feature.id ? updatedFeature : f)
             : [...p.features, updatedFeature]
         };
@@ -241,10 +241,10 @@ export default function App() {
         if (p.id === selectedProject?.id) {
           return {
             ...p,
-            features: p.features.map(f => 
-              f.id === generationState.feature.id 
-                ? { 
-                    ...f, 
+            features: p.features.map(f =>
+              f.id === generationState.feature.id
+                ? {
+                    ...f,
                     status: 'in-progress' as const,
                     generationState: {
                       requirements: generationState.requirements,
@@ -307,10 +307,10 @@ export default function App() {
         if (p.id === selectedProject?.id) {
           return {
             ...p,
-            features: p.features.map(f => 
-              f.id === generationState.feature.id 
-                ? { 
-                    ...f, 
+            features: p.features.map(f =>
+              f.id === generationState.feature.id
+                ? {
+                    ...f,
                     status: 'completed' as const,
                     generationState: {
                       requirements: generationState.requirements,
@@ -658,14 +658,14 @@ export default function App() {
               {currentStep === 1 && (
                 <RequirementCollectionStep onComplete={handleStep1Complete} />
               )}
-              
+
               {currentStep === 2 && apiSpec && (
-                <ScriptGenerationStep 
+                <ScriptGenerationStep
                   apiSpec={apiSpec}
                   onComplete={handleStep2Complete}
                 />
               )}
-              
+
               {currentStep === 3 && apiSpec && testScripts.length > 0 && (
                 <PostmanExportStep
                   apiSpec={apiSpec}
@@ -677,11 +677,11 @@ export default function App() {
 
             {/* Footer Info */}
             <div className="mt-8 text-center text-sm text-gray-500">
-              <p>Powered by AI • {new Date().toLocaleDateString('vi-VN', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+              <p>Powered by AI • {new Date().toLocaleDateString('vi-VN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
               })}</p>
               <p className="mt-1">System Version 2.1.0 • Last Updated: October 17, 2025</p>
             </div>

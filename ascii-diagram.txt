@@ -48,7 +48,7 @@ Project Detail & Feature Management
         v
  (see Test Generation sections)
 
-New AI-Assisted Flow (currentView='test-generation-new' -> 'test-requirements' -> 'test-scripts')
+AI-Assisted Flow (currentView='test-generation-new' -> 'test-requirements' -> 'test-scripts')
 -----------------------------------------------------------------------------------------------
 [ProjectDetail] --onStartTestGeneration--> App.setCurrentView('test-generation-new')
                                                 |
@@ -99,31 +99,7 @@ New AI-Assisted Flow (currentView='test-generation-new' -> 'test-requirements' -
                                       | ProjectDetail resumes   |
                                       +-------------------------+
 
-Legacy 3-Step Flow (currentView='test-generation')
--------------------------------------------------
-[ProjectDetail] --onStartTestGeneration--> App.setCurrentView('test-generation')
-                         |
-                         v
-                +------------------------------+
-                | Step 1: RequirementCollection|
-                |  (RequirementCollectionStep) |
-                +--------------+---------------+
-                               | onComplete(spec, notes)
-                               v
-                +------------------------------+
-                | Step 2: ScriptGeneration     |
-                |    (ScriptGenerationStep)    |
-                +--------------+---------------+
-                               | onComplete(scripts, reqs)
-                               v
-                +------------------------------+
-                | Step 3: PostmanExportStep    |
-                |  (PostmanExportStep component)|
-                +--------------+---------------+
-                               |
-                               | ready for Postman export
-                               v
-                        Test artifacts showcased
+
 
 Data & Utility Sources
 ----------------------

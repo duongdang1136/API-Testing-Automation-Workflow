@@ -8,10 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
 import { toast } from 'sonner@2.0.3';
-import { 
-  X, 
-  Save, 
-  Sparkles, 
+import {
+  X,
+  Save,
+  Sparkles,
   AlertCircle,
   FileCode,
   Plus,
@@ -29,7 +29,7 @@ interface FeatureFormProps {
 
 export function FeatureForm({ project, feature, onSave, onCancel }: FeatureFormProps) {
   const isEditMode = !!feature;
-  
+
   const [formData, setFormData] = useState({
     name: feature?.name || '',
     description: feature?.description || '',
@@ -64,7 +64,7 @@ export function FeatureForm({ project, feature, onSave, onCancel }: FeatureFormP
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validate()) {
       return;
     }
@@ -88,7 +88,7 @@ export function FeatureForm({ project, feature, onSave, onCancel }: FeatureFormP
 
       onSave(savedFeature);
       setIsSaving(false);
-      
+
       // Show success toast
       toast.success(
         isEditMode ? 'Feature updated successfully!' : 'Feature created successfully!',
@@ -207,8 +207,8 @@ export function FeatureForm({ project, feature, onSave, onCancel }: FeatureFormP
               <Label htmlFor="status" className="text-gray-700">
                 Status
               </Label>
-              <Select 
-                value={formData.status} 
+              <Select
+                value={formData.status}
                 onValueChange={(value: any) => setFormData({ ...formData, status: value })}
               >
                 <SelectTrigger className="mt-2 border-gray-300">

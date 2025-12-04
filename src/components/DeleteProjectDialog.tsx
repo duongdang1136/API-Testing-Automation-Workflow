@@ -14,12 +14,12 @@ interface DeleteProjectDialogProps {
   featureCount?: number;
 }
 
-export function DeleteProjectDialog({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
+export function DeleteProjectDialog({
+  isOpen,
+  onClose,
+  onConfirm,
   project,
-  featureCount = 0 
+  featureCount = 0
 }: DeleteProjectDialogProps) {
   const [confirmText, setConfirmText] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -102,7 +102,7 @@ export function DeleteProjectDialog({
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
               <p className="text-xs text-yellow-900">
-                <strong>Important:</strong> Make sure you have exported any important data before deleting. 
+                <strong>Important:</strong> Make sure you have exported any important data before deleting.
                 This action is permanent and cannot be recovered.
               </p>
             </div>

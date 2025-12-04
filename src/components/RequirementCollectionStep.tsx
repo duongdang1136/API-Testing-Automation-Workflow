@@ -33,14 +33,14 @@ export function RequirementCollectionStep({ onComplete }: RequirementCollectionS
 
   const handleSubmit = () => {
     setProcessing(true);
-    
+
     setTimeout(() => {
-      const apiSpec = useTemplate 
+      const apiSpec = useTemplate
         ? sampleAPISpecs.find(spec => spec.id === selectedSpec)!
         : customSpec as APISpecification;
-      
+
       setShowSuccess(true);
-      
+
       setTimeout(() => {
         onComplete(apiSpec, additionalInfo);
       }, 1000);
@@ -140,7 +140,7 @@ export function RequirementCollectionStep({ onComplete }: RequirementCollectionS
                           <p className="text-xs text-gray-600 mb-2">Status Codes:</p>
                           <div className="flex flex-wrap gap-2">
                             {spec.statusCodes.map(status => (
-                              <Badge 
+                              <Badge
                                 key={status.code}
                                 className={
                                   status.code < 300 ? 'bg-green-100 text-green-700 border-green-200' :
@@ -199,8 +199,8 @@ export function RequirementCollectionStep({ onComplete }: RequirementCollectionS
 
               <div>
                 <Label>Method</Label>
-                <Select 
-                  value={customSpec.method} 
+                <Select
+                  value={customSpec.method}
                   onValueChange={(value: any) => setCustomSpec({ ...customSpec, method: value })}
                 >
                   <SelectTrigger className="border-gray-300">

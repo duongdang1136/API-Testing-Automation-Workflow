@@ -4,14 +4,14 @@ import { APISpecification, TestRequirement, TestScript, PostmanCollection } from
 export async function generateTestRequirements(description: string): Promise<TestRequirement[]> {
   const requirements: TestRequirement[] = [];
   const timestamp = new Date().toISOString();
-  
+
   // Parse the description to extract API details
   const hasLogin = description.toLowerCase().includes('login');
   const hasRegister = description.toLowerCase().includes('register') || description.toLowerCase().includes('signup');
   const hasAuth = description.toLowerCase().includes('auth');
   const hasCart = description.toLowerCase().includes('cart');
   const hasPayment = description.toLowerCase().includes('payment') || description.toLowerCase().includes('subscribe');
-  
+
   // Generate happy path requirement
   requirements.push({
     id: `req-${Date.now()}-1`,
@@ -347,11 +347,11 @@ function generateJavaScriptTestScript(
   timestamp: string
 ): TestScript {
   const mockData = generateMockData(apiSpec);
-  
+
   let code = `// Test: ${requirement.title}\n`;
   code += `// Generated at: ${timestamp}\n\n`;
   code += `pm.test("${requirement.title}", function () {\n`;
-  
+
   if (requirement.testType === 'happy') {
     code += `    const requestBody = ${JSON.stringify(mockData.request, null, 8)};\n\n`;
     code += `    pm.sendRequest({\n`;
@@ -384,7 +384,7 @@ function generateJavaScriptTestScript(
     code += `        pm.expect(jsonData.error).to.have.property("message");\n`;
     code += `    });\n`;
   }
-  
+
   code += `});`;
 
   return {
@@ -407,14 +407,14 @@ function generatePythonTestScript(
   timestamp: string
 ): TestScript {
   const mockData = generateMockData(apiSpec);
-  
+
   let code = `# Test: ${requirement.title}\n`;
   code += `# Generated at: ${timestamp}\n\n`;
   code += `import requests\nimport pytest\n\n`;
   code += `def test_${requirement.id.replace(/-/g, '_')}():\n`;
   code += `    base_url = "http://localhost:3000"\n`;
   code += `    endpoint = "${apiSpec.endpoint}"\n\n`;
-  
+
   if (requirement.testType === 'happy') {
     code += `    payload = ${JSON.stringify(mockData.request, null, 4).replace(/"/g, "'")}\n\n`;
     code += `    response = requests.${apiSpec.method.toLowerCase()}(f"{base_url}{endpoint}", json=payload)\n\n`;
@@ -452,14 +452,14 @@ function generateTypeScriptTestScript(
   timestamp: string
 ): TestScript {
   const mockData = generateMockData(apiSpec);
-  
+
   let code = `// Test: ${requirement.title}\n`;
   code += `// Generated at: ${timestamp}\n\n`;
   code += `import { test, expect } from '@playwright/test';\n\n`;
   code += `test('${requirement.title}', async ({ request }) => {\n`;
   code += `    const baseUrl = 'http://localhost:3000';\n`;
   code += `    const endpoint = '${apiSpec.endpoint}';\n\n`;
-  
+
   if (requirement.testType === 'happy') {
     code += `    const payload = ${JSON.stringify(mockData.request, null, 4)};\n\n`;
     code += `    const response = await request.${apiSpec.method.toLowerCase()}(\`\${baseUrl}\${endpoint}\`, {\n`;
@@ -482,7 +482,7 @@ function generateTypeScriptTestScript(
     code += `    const data = await response.json();\n`;
     code += `    expect(data).toHaveProperty('error');\n`;
   }
-  
+
   code += `});`;
 
   return {
@@ -541,8 +541,8 @@ function generateMockData(apiSpec: APISpecification) {
       // Generate mock data based on data type
       switch (field.dataType.toLowerCase()) {
         case 'string':
-          request[field.name] = field.validation?.includes('email') 
-            ? 'test@example.com' 
+          request[field.name] = field.validation?.includes('email')
+            ? 'test@example.com'
             : `mock_${field.name}`;
           break;
         case 'number':
@@ -608,7 +608,7 @@ export function convertToPostmanCollection(
 
   testScripts.forEach(script => {
     const urlParts = apiSpec.endpoint.split('/').filter(p => p);
-    
+
     collection.item.push({
       name: script.title,
       request: {

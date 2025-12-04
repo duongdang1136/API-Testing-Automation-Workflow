@@ -1,0 +1,109 @@
+// --- 1. IAM & Project Management ---
+Table User {
+  id string [pk]
+  email string [unique]
+  name string
+  password_hash string
+  role enum // ADMIN, USER, VIEWER
+  avatar_url string
+  created_at datetime
+  last_login datetime
+}
+Table Project {
+  id string [pk]
+  name string
+  description string
+  status enum // ACTIVE, ARCHIVED
+  created_by string [ref: > User.id]
+  created_at datetime
+  updated_at datetime
+}
+Table ProjectMember {
+  project_id string [ref: > Project.id]
+  user_id string [ref: > User.id]
+  role enum // OWNER, EDITOR, VIEWER
+  joined_at datetime
+  
+  indexes {
+    (project_id, user_id) [pk]
+  }
+}
+// --- 2. Feature & Input Layer ---
+Table Feature {
+  id string [pk]
+  project_id string [ref: > Project.id]
+  name string
+  // User Input Fields
+  description text [note: "Mô tả chi tiết tính năng (User Input)"]
+  attachments json [note: "Danh sách file/ảnh đính kèm (User Input)"]
+  // Metadata
+  status enum // PENDING, ANALYZING, GENERATED, COMPLETED
+  ai_context_id string [note: "ID tham chiếu đến context của AI Vector DB (nếu có)"]
+  created_by string [ref: > User.id]
+  created_at datetime
+  updated_at datetime
+}
+// --- 3. AI Generation Layer (Structured Data) ---
+// AI phân tích Feature Description -> APISpecification
+Table APISpecification {
+  id string [pk]
+  feature_id string [ref: > Feature.id]
+  name string
+  method enum // GET, POST, PUT, DELETE, PATCH
+  endpoint string
+  description string
+  // Structured Schema
+  request_schema json [note: "Cấu trúc JSON body/params"]
+  response_schema json [note: "Cấu trúc JSON response"]
+  status_codes json [note: "Danh sách mã lỗi: 200, 400, 401..."]
+  business_rules json [note: "Danh sách rules nghiệp vụ"]
+  
+  created_at datetime
+  updated_at datetime
+}
+// AI sinh Test Cases từ APISpecification
+Table TestRequirement {
+  id string [pk]
+  spec_id string [ref: > APISpecification.id]
+  title string
+  description string
+  test_type enum // HAPPY_PATH, VALIDATION, EXCEPTION, SECURITY, PERFORMANCE
+  priority enum // HIGH, MEDIUM, LOW
+  criteria json [note: "Danh sách các tiêu chí kiểm thử (Checklist)"]
+  is_selected boolean [default: true]
+  
+  created_at datetime
+}
+// AI sinh Code từ TestRequirement
+Table TestScript {
+  id string [pk]
+  requirement_id string [ref: > TestRequirement.id]
+  title string
+  language enum // JAVASCRIPT, PYTHON, TYPESCRIPT
+  framework string // e.g., "Postman", "Pytest", "Playwright"
+  code text [note: "Source code kiểm thử"]
+  steps json [note: "Các bước thực hiện (structured steps)"]
+  mock_data json [note: "Dữ liệu giả lập để chạy test"]
+  
+  created_at datetime
+  updated_at datetime
+}
+// --- 4. Export & Versioning ---
+Table PostmanCollection {
+  id string [pk]
+  feature_id string [ref: > Feature.id]
+  name string
+  content json [note: "Toàn bộ nội dung file JSON Postman Collection"]
+  exported_at datetime
+  exported_by string [ref: > User.id]
+}
+Table VersionHistory {
+  id string [pk]
+  entity_type enum // FEATURE, SCRIPT
+  entity_id string
+  version_number int
+  changes_summary string
+  snapshot_data json [note: "Lưu trạng thái dữ liệu tại thời điểm version"]
+  created_at datetime
+  created_by string [ref: > User.id]
+}
